@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<GridPane xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Program">
+    <children>
+        <AnchorPane prefHeight="650.0" prefWidth="1080.0">
+            <children>
+                <Rectangle arcHeight="15.0" arcWidth="15.0" fill="WHITE" height="610.0" layoutX="15.0" layoutY="15.0" stroke="BLACK" strokeType="INSIDE" width="220.0" />
+                <Label layoutX="25.0" layoutY="20.0" text="Customers" />
+                <TableView fx:id="tvListofCustomers" layoutX="25.0" layoutY="40.0" prefHeight="445.0" prefWidth="200.0" />
+                <Label layoutX="25.0" layoutY="485.0" text="First Name" />
+                <TextField fx:id="txtFirstName" layoutX="25.0" layoutY="500.0" prefHeight="25.0" prefWidth="120.0" />
+                <Label layoutX="25.0" layoutY="525.0" text="Last Name" />
+                <TextField fx:id="txtLastName" layoutX="25.0" layoutY="540.0" prefHeight="25.0" prefWidth="120.0" />
+                <Button layoutX="155.0" layoutY="500.0" mnemonicParsing="false" onAction="#btnSearchCustomer" prefHeight="67.0" prefWidth="70.0" text="Search" />
+                <Button layoutX="25.0" layoutY="580.0" mnemonicParsing="false" onAction="#btnAddCustomer" prefHeight="25.0" prefWidth="120.0" text="Add Customer" />
+            <TabPane layoutX="240.0" layoutY="15.0" prefHeight="610.0" prefWidth="830.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+
+                <Tab text="New Bookings">
+                    <AnchorPane prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: white;">
+                        <children>
+                            <TableView fx:id="tvListofRooms" layoutX="10.0" layoutY="10.0" prefHeight="300.0" prefWidth="810.0" />
+                            <DatePicker layoutX="14.0" layoutY="320.0" />
+                            <DatePicker layoutX="196.0" layoutY="320.0" />
+                        </children>
+                    </AnchorPane>
+                </Tab>
+                <Tab text="Rooms">
+
+                </Tab>
+                  <Tab text="Add Hotel">
+                      <content>
+                          <fx:include fx:id="AddHotel" source="AddHotel.fxml" />
+                      </content>
+                  </Tab>
+              </tabs>
+            </TabPane>
+            <Label fx:id="lblStatus" layoutX="10.0" layoutY="626.0" text="Status:" />
+
+
+            </children>
+        </AnchorPane>
+
+    </children>
+   <columnConstraints>
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+   </rowConstraints>
+
+</GridPane>

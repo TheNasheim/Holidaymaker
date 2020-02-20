@@ -6,7 +6,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 
@@ -17,14 +20,31 @@ public class Program {
     public TextField txtLastName;
     public TextField txtFirstName;
     public Label lblStatus;
+    public DatePicker dpStartDate;
+    public DatePicker dpEndDate;
+    public TableView tvListofRooms;
+    public CheckBox cbPool;
+    public CheckBox cbChildActivity;
+    public CheckBox cbEveningEvent;
+    public TextField txtBeach;
+    public TextField txtCenter;
+    public ComboBox cbHotelNames;
 
 
     public void initializeGUI() {
         Database.connect();
         tv_Customers();
         fill_tv_Customers("", "");
+        fixDatePickers();
     }
 
+    private void fixDatePickers(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String startDate = "2020-06-01";
+        String endDate = "2020-07-31";
+        restrictDatePicker(dpStartDate, LocalDate.parse(startDate),LocalDate.parse(endDate));
+        restrictDatePicker(dpEndDate, LocalDate.parse(startDate),LocalDate.parse(endDate));
+    }
     // region UI
     // UI Settings and changes
     //
@@ -92,7 +112,28 @@ public class Program {
         txtLastName.setText("");
     }
 
-
+    public void restrictDatePicker(DatePicker datePicker, LocalDate minDate, LocalDate maxDate) {
+        final Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() {
+            @Override
+            public DateCell call(final DatePicker datePicker) {
+                return new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item.isBefore(minDate)) {
+                            setDisable(true);
+                            setStyle("-fx-background-color: #ffc0cb;");
+                        }else if (item.isAfter(maxDate)) {
+                            setDisable(true);
+                            setStyle("-fx-background-color: #ffc0cb;");
+                        }
+                    }
+                };
+            }
+        };
+        datePicker.setDayCellFactory(dayCellFactory);
+        datePicker.setValue(minDate);
+    }
 
 
 }

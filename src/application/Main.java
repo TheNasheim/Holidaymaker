@@ -20,7 +20,7 @@ public class Main extends Application {
             Stage stage = new Stage();
             String title = String.format("Holiday Maker");
             stage.setTitle(title);
-            stage.setScene(new Scene(root, 1080 , 800));
+            stage.setScene(new Scene(root, 1080 , 650));
             stage.setResizable(false);
             stage.show();
         }

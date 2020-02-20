@@ -14,10 +14,10 @@ public class Hotel {
     Boolean pool;
     Boolean childActivity;
     Boolean eveningEvents;
-    Double distancetoBeach;
-    Double distancetoCenter;
+    Integer distancetoBeach;
+    Integer distancetoCenter;
 
-    public Hotel(int id, String name, String address, String zip, String city, String country, String phone, Boolean pool, Boolean childActivity, Boolean eveningEvents, Double distancetoBeach, Double distancetoCenter) {
+    public Hotel(int id, String name, String address, String zip, String city, String country, String phone, Boolean pool, Boolean childActivity, Boolean eveningEvents, Integer distancetoBeach, Integer distancetoCenter) {
         this.id = id;
         Name = name;
         this.address = address;
@@ -72,11 +72,11 @@ public class Hotel {
         return eveningEvents;
     }
 
-    public Double getDistancetoBeach() {
+    public Integer getDistancetoBeach() {
         return distancetoBeach;
     }
 
-    public Double getDistancetoCenter() {
+    public Integer getDistancetoCenter() {
         return distancetoCenter;
     }
 }

@@ -11,13 +11,14 @@ public class Hotel {
     String city;
     String country;
     String phone;
+    double stars;
     Boolean pool;
     Boolean childActivity;
     Boolean eveningEvents;
     Integer distancetoBeach;
     Integer distancetoCenter;
 
-    public Hotel(int id, String name, String address, String zip, String city, String country, String phone, Boolean pool, Boolean childActivity, Boolean eveningEvents, Integer distancetoBeach, Integer distancetoCenter) {
+    public Hotel(int id, String name, String address, String zip, String city, String country, String phone, double stars, Boolean pool, Boolean childActivity, Boolean eveningEvents, Integer distancetoBeach, Integer distancetoCenter) {
         this.id = id;
         Name = name;
         this.address = address;
@@ -25,6 +26,7 @@ public class Hotel {
         this.city = city;
         this.country = country;
         this.phone = phone;
+        this.stars = stars;
         this.pool = pool;
         this.childActivity = childActivity;
         this.eveningEvents = eveningEvents;
@@ -58,6 +60,10 @@ public class Hotel {
 
     public String getPhone() {
         return phone;
+    }
+
+    public double getStars() {
+        return stars;
     }
 
     public Boolean getPool() {

@@ -40,6 +40,7 @@ public class AddHotel {
                     txtHotelCity.getText(),
                     txtHotelCountry.getText(),
                     txtHotelPhone.getText(),
+                    0,
                     cbPool.isSelected(),
                     cbChildActivity.isSelected(),
                     cbEveningEvent.isSelected(),
@@ -173,7 +174,7 @@ public class AddHotel {
 
 
     private void fillHotelTV(){
-        ArrayList<Hotel> hotels = Database.getAllHotelList();
+        ArrayList<Hotel> hotels = Database.getHotelList("");
         if (hotels.size() > 0) {
             for (Hotel hotel : hotels) {
                 tvListofHotels.getItems().add(hotel);

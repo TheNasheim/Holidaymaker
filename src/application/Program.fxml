@@ -20,48 +20,62 @@
             <TabPane layoutX="240.0" layoutY="15.0" prefHeight="610.0" prefWidth="830.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
 
-                <Tab text="New Reservations">
+                <Tab text="Find Hotel">
                     <AnchorPane prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: white;">
                         <children>
-                            <TableView fx:id="tvListofRooms" layoutX="10.0" layoutY="10.0" prefHeight="300.0" prefWidth="810.0" />
+                            <TableView fx:id="tvListofHotels" layoutX="10.0" layoutY="10.0" onMouseClicked="#onListofHotels_Click" prefHeight="410.0" prefWidth="810.0" />
 
-                            <Rectangle arcHeight="15.0" arcWidth="15.0" fill="WHITE" height="220.0" layoutX="10.0" layoutY="320.0" stroke="BLACK" strokeType="INSIDE" width="320.0" />
-                            <Label layoutX="75.0" layoutY="320.0" text="Search criterias" />
-                            <Label layoutX="15.0" layoutY="335.0" text="Start Date" />
-                            <DatePicker fx:id="dpStartDate" layoutX="15.0" layoutY="350.0" />
-                            <Label layoutX="15.0" layoutY="375.0" text="End Date" />
-                            <DatePicker fx:id="dpEndDate" layoutX="15.0" layoutY="390.0" />
-                            <Label layoutX="15.0" layoutY="415.0" text="Hotel" />
-                            <ComboBox fx:id="cbHotelNames" layoutX="15.0" layoutY="430.0" prefHeight="25.0" prefWidth="175.0" />
+                            <Rectangle arcHeight="15.0" arcWidth="15.0" fill="WHITE" height="130.0" layoutX="10.0" layoutY="425.0" stroke="BLACK" strokeType="INSIDE" width="460.0" />
+                            <Label layoutX="205.0" layoutY="425.0" text="Search criterias" />
+                            <Label layoutX="15.0" layoutY="440.0" text="Location/City" />
+                            <ComboBox fx:id="cbLocation" layoutX="15.0" layoutY="455.0" prefHeight="25.0" prefWidth="175.0" />
 
+                            <Rectangle arcHeight="15.0" arcWidth="15.0" fill="WHITE" height="100.0" layoutX="200.0" layoutY="445.0" stroke="BLACK" strokeType="INSIDE" width="120.0" />
+                            <CheckBox fx:id="cbPool" layoutX="210.0" layoutY="455.0" mnemonicParsing="false" text="Pool" />
+                            <CheckBox fx:id="cbChildActivity" layoutX="210.0" layoutY="485.0" mnemonicParsing="false" text="Child activity" />
+                            <CheckBox fx:id="cbEveningEvent" layoutX="210.0" layoutY="515.0" mnemonicParsing="false" text="Evening Events" />
 
-                            <Rectangle arcHeight="15.0" arcWidth="15.0" fill="WHITE" height="100.0" layoutX="200.0" layoutY="325.0" stroke="BLACK" strokeType="INSIDE" width="120.0" />
-                            <CheckBox fx:id="cbPool" layoutX="210.0" layoutY="335.0" mnemonicParsing="false" text="Pool" />
-                            <CheckBox fx:id="cbChildActivity" layoutX="210.0" layoutY="365.0" mnemonicParsing="false" text="Child activity" />
-                            <CheckBox fx:id="cbEveningEvent" layoutX="210.0" layoutY="395.0" mnemonicParsing="false" text="Evening Events" />
+                            <Rectangle arcHeight="15.0" arcWidth="15.0" fill="WHITE" height="100.0" layoutX="340.0" layoutY="445.0" stroke="BLACK" strokeType="INSIDE" width="120.0" />
+                            <Label layoutX="350.0" layoutY="450.0" text="Dist to Beach" />
+                            <TextField fx:id="txtBeach" layoutX="350.0" layoutY="465.0" prefHeight="25.0" prefWidth="100.0" text="0" />
+                            <Label layoutX="350.0" layoutY="490.0" text="Dist to TownCenter" />
+                            <TextField fx:id="txtCenter" layoutX="350.0" layoutY="505.0" prefHeight="25.0" prefWidth="100.0" text="0" />
 
-                            <Rectangle arcHeight="15.0" arcWidth="15.0" fill="WHITE" height="100.0" layoutX="200.0" layoutY="435.0" stroke="BLACK" strokeType="INSIDE" width="120.0" />
-                            <Label layoutX="210.0" layoutY="440.0" text="Dist to Beach" />
-                            <TextField fx:id="txtBeach" layoutX="210.0" layoutY="455.0" prefHeight="25.0" prefWidth="100.0" text="0" />
-                            <Label layoutX="210.0" layoutY="480.0" text="Dist to TownCenter" />
-                            <TextField fx:id="txtCenter" layoutX="210.0" layoutY="495.0" prefHeight="25.0" prefWidth="100.0" text="0" />
+                            <Button layoutX="110.0" layoutY="520.0" mnemonicParsing="false" onAction="#btnFindHotels" prefWidth="80.0" text="Find Hotels" />
+                            <Label fx:id="lblStatus1" layoutX="10.0" layoutY="560.0" text="Status:" />
+                        </children>
+                    </AnchorPane>
+                </Tab>
+                <Tab text="Find Vacant Rooms">
+                    <AnchorPane prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: white;">
+                        <children>
+                            <TableView fx:id="tvListofRooms" layoutX="10.0" layoutY="10.0" prefHeight="410.0" prefWidth="810.0" />
 
-                            <Button layoutX="115.0" layoutY="508.0" mnemonicParsing="false" prefWidth="80.0" text="Find Rooms" />
+                            <Rectangle arcHeight="15.0" arcWidth="15.0" fill="WHITE" height="130.0" layoutX="10.0" layoutY="425.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
+                            <Label layoutX="105.0" layoutY="425.0" text="Search criterias" />
+                            <Label layoutX="20.0" layoutY="430.0" text="Start Date" />
+                            <DatePicker fx:id="dpStartDate" layoutX="20.0" layoutY="445.0" />
+                            <Label layoutX="20.0" layoutY="470.0" text="End Date" />
+                            <DatePicker fx:id="dpEndDate" layoutX="20.0" layoutY="485.0" />
+                            <Button layoutX="20.0" layoutY="520.0" mnemonicParsing="false" onAction="#btnFindRooms" prefWidth="140.0" text="Show available rooms" />
+
+                            <Rectangle arcHeight="15.0" arcWidth="15.0" fill="WHITE" height="130.0" layoutX="230.0" layoutY="425.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
+                            <CheckBox fx:id="cbBreakfast" layoutX="240.0" layoutY="435.0" mnemonicParsing="false" text="Breakfast" />
+                            <CheckBox fx:id="cbHalf_Broad" layoutX="240.0" layoutY="465.0" mnemonicParsing="false" text="Half Broad" />
+                            <CheckBox fx:id="cbFull_Broad" layoutX="240.0" layoutY="495.0" mnemonicParsing="false" text="Full Broad" />
+                            <CheckBox fx:id="cbExtraBed" layoutX="240.0" layoutY="525.0" mnemonicParsing="false" text="Extra Bed" />
 
                         </children>
                     </AnchorPane>
                 </Tab>
-                <Tab text="Rooms">
-
-                </Tab>
-                  <Tab text="Add Hotel">
+                  <Tab text="Add Hotel With Rooms">
                       <content>
                           <fx:include fx:id="AddHotel" source="AddHotel.fxml" />
                       </content>
                   </Tab>
               </tabs>
             </TabPane>
-            <Label fx:id="lblStatus" layoutX="10.0" layoutY="626.0" text="Status:" />
+
 
 
             </children>

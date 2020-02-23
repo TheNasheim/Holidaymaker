@@ -126,36 +126,29 @@ public class Database {
             statement.setDouble(10, hotel.getDistancetoBeach());
             statement.setDouble(11, hotel.getDistancetoCenter());
             statement.executeUpdate();
+
+            int index = getHotelId(hotel.getName());
+            statement = conn.prepareStatement("INSERT INTO rating SET hotel_id = ?, stars = ?");
+            statement.setInt(1, index);
+            statement.setInt(2, 2);
+            statement.executeUpdate();
+            statement = conn.prepareStatement("INSERT INTO rating SET hotel_id = ?, stars = ?");
+            statement.setInt(1, index);
+            statement.setInt(2, 3);
+            statement.executeUpdate();
+
             return " was added successfully.";
         } catch (Exception ex) {
             ex.printStackTrace();
+
             return "Something is wrong! Hotel was not added.";
         }
     }
 
-    /*
-    // this is a expansion for some other time.
-        public static String editHotel(){
-            try {
-            }
-            catch (Exception ex){
-                ex.printStackTrace();
-            }
-        }
-
-        public static String deleteHotel(){
-            try {
-            }
-            catch (Exception ex){
-                ex.printStackTrace();
-            }
-        }
-    */
-
     public static int getHotelId(String hotelname) {
         int index = 0;
         try {
-            statement = conn.prepareStatement("SELECT id FROM hotel WHERE name = ?");
+            statement = conn.prepareStatement("SELECT id FROM hotel WHERE hotel_name = ?");
             statement.setString(1, hotelname);
             resultSet = statement.executeQuery();
         } catch (Exception ex) {
@@ -175,10 +168,11 @@ public class Database {
         ArrayList<Hotel> hotels = new ArrayList<>();
         try {
             String query = "";
-            if(location.contains("Show All"))
-                query = "SELECT * FROM hotels_with_rating";
+            if(location.contains("Show All")) {
+                query = "SELECT * FROM hotels_with_rating WHERE 1=1 ";}
              else {
-                query = "SELECT * FROM hotels_with_rating WHERE city = ? ";
+                query = "SELECT * FROM hotels_with_rating WHERE city = ? ";}
+
                 if (poolIn)
                     query += "AND pool = 'true' ";
                 if (childIn)
@@ -189,7 +183,7 @@ public class Database {
                     query += "AND distancetobeach <= ? ";
                 if (centerIn > 0)
                     query += "AND distancetocenter <= ? ";
-            }
+
             statement = conn.prepareStatement(query);
             if(!location.contains("Show All")) {
                 statement.setString(1, location);
@@ -199,6 +193,14 @@ public class Database {
                     statement.setInt(3, centerIn);
                 else if (centerIn > 0)
                     statement.setInt(2, centerIn);
+            }
+            else {
+                if (beachIn > 0)
+                    statement.setInt(1, beachIn);
+                if (centerIn > 0 && beachIn > 0)
+                    statement.setInt(2, centerIn);
+                else if (centerIn > 0)
+                    statement.setInt(1, centerIn);
             }
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
@@ -264,20 +266,20 @@ public class Database {
             "WHEN room_type = 'Quad' THEN quad_room " +
             "WHEN room_type = 'Queen' THEN queen_room " +
             "WHEN room_type = 'King' THEN king_room " +
-            "END) AS room_prize, prize.extra_bed, prize.breakfast, half_broad, full_broad " +
+            "END) AS room_price, price.extra_bed, price.breakfast, half_broad, full_broad " +
             "FROM hotel " +
             "JOIN room " +
             "ON hotel.id = room.hotel_id " +
             "LEFT JOIN reservation " +
             "ON room.id = reservation.room_id " +
-            "LEFT JOIN prize " +
-            "ON prize.hotel_id = hotel.id " +
+            "LEFT JOIN price " +
+            "ON price.hotel_id = hotel.id " +
             "WHERE room.id NOT IN (SELECT room_id " +
                     "FROM reservation " +
                     "WHERE ? BETWEEN reservation.checkin_date AND reservation.checkout_date " +
                     "OR ? BETWEEN reservation.checkin_date AND reservation.checkout_date	) " +
             "AND hotel.id = ? " +
-            "AND ? BETWEEN prize.start_date AND prize.end_date " +
+            "AND ? BETWEEN price.start_date AND price.end_date " +
             "GROUP BY id " +
             "ORDER BY id";
             statement = conn.prepareStatement(query);
@@ -285,31 +287,6 @@ public class Database {
             statement.setString(2, endDate.toString());
             statement.setInt(3, hotelId);
             statement.setString(4, startDate.toString());
-       /*     statement = conn.prepareStatement("SELECT room.id, room.hotel_id, room.room_type, reservation.checkin_date, reservation.checkout_date, " +
-                            "(CASE WHEN room_type = 'Single' THEN single_room " +
-                            "             WHEN room_type = 'Double' THEN double_room " +
-                            "             WHEN room_type = 'Quad' THEN quad_room " +
-                            "             WHEN room_type = 'King' THEN queen_room " +
-                            "       END) AS room_prize, prize.extra_bed, prize.breakfast, half_broad, full_broad  " +
-                            "FROM hotel " +
-                            "JOIN room " +
-                            "ON hotel.id = room.hotel_id " +
-                            "LEFT JOIN reservation " +
-                            "ON room.id = reservation.room_id " +
-                            "LEFT JOIN prize " +
-                            "ON prize.hotel_id = hotel.id " +
-                            "WHERE room.id NOT IN ( " +
-                            " SELECT room_id " +
-                            " FROM reservation " +
-                            " WHERE '2020-06-10' BETWEEN reservation.checkin_date AND reservation.checkout_date " +
-                            " OR '2020-06-20' BETWEEN reservation.checkin_date AND reservation.checkout_date " +
-                             ")" +
-                            " AND hotel.id = 1 " +
-                            " AND '2020-06-10' BETWEEN prize.start_date AND prize.end_date  " +
-                            "GROUP BY id " +
-                            "ORDER BY id");
-*/
-
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");
@@ -317,12 +294,12 @@ public class Database {
                 String room_type = resultSet.getString("room_type");
                 String checkin_date = resultSet.getString("checkin_date");
                 String checkout_date = resultSet.getString("checkout_date");
-                double room_prize = resultSet.getDouble("room_prize");
+                double room_price = resultSet.getDouble("room_price");
                 double extra_bed = resultSet.getDouble("extra_bed");
                 double breakfast = resultSet.getDouble("breakfast");
                 double half_broad = resultSet.getDouble("half_broad");
                 double full_broad = resultSet.getDouble("full_broad");
-                rooms.add(new Room(id, room_type, hotel_id, room_prize,extra_bed, breakfast, half_broad, full_broad));
+                rooms.add(new Room(id, room_type, hotel_id, room_price,extra_bed, breakfast, half_broad, full_broad));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -330,6 +307,43 @@ public class Database {
         return rooms;
     }
 
+
+    public static void addReservation(int customerId, int guests, ArrayList<Reservation> reservations){
+        String query1 = "INSERT INTO booking SET customer_id = ?, guests = ?";
+        String query2 = "SELECT id FROM booking ORDER BY id DESC LIMIT 1";
+        String query3 = "INSERT INTO reservation SET booking_id = ?, room_id = ?, checkin_date = ?, checkiout_date = ?, extra_bed = ?, board = ?, price = ?";
+        int bookingId = 0;
+        try {
+            statement = conn.prepareStatement(query1);
+            statement.setInt(1, customerId);
+            statement.setInt(2, guests);
+            statement.executeUpdate();
+
+            statement = conn.prepareStatement(query2);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+               bookingId = resultSet.getInt("id");
+            }
+            for(Reservation reservation : reservations) {
+                statement = conn.prepareStatement(query3);
+                statement.setInt(1, reservation.getBooking_Id());
+                statement.setInt(2, reservation.getRoom_Id());
+                statement.setString(3, reservation.getCheckin_date().toString());
+                statement.setString(4, reservation.getCheckout_date().toString());
+                statement.setString(5, reservation.getExtra_bed());
+                statement.setString(6, reservation.getBoard());
+                statement.setDouble(7, reservation.getPrice());
+                statement.executeUpdate();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+
+
+
+
+    }
 
     public static void test() {
         try {
@@ -362,8 +376,38 @@ public class Database {
             //return "Something is wrong! Customer was not added.";
         }
     }
-}
 
+    public static void addHotelRating(int id, int stars) {
+        try {
+            statement = conn.prepareStatement("INSERT INTO rating SET hotel_id = ?, stars = ?");
+            statement.setInt(1, id);
+            statement.setInt(2, stars);
+            statement.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void addPricetoHotel(Price price) {
+        try {
+            statement = conn.prepareStatement("INSERT INTO price SET hotel_id = ?, start_date = ?, end_date = ?, single_room = ?, double_room = ?, quad_room = ?, queen_room = ?, king_room = ?, extra_bed = ?, breakfast = ?, half_broad = ?, full_broad = ?");
+            statement.setInt(1, price.getHotel_id());
+            statement.setString(2, price.getStart_date().toString());
+            statement.setString(3, price.getEnd_date().toString());
+            statement.setDouble(4, price.getSingle_room());
+            statement.setDouble(5, price.getDouble_room());
+            statement.setDouble(6, price.getQuad_room());
+            statement.setDouble(7, price.getQueen_room());
+            statement.setDouble(8, price.getKing_room());
+            statement.setDouble(9, price.getExtra_bed());
+            statement.setDouble(10, price.getHalf_broad());
+            statement.setDouble(11, price.getFull_broad());
+            statement.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+}
 
 
 /*
@@ -422,7 +466,7 @@ SELECT room.id, room_type, hotel_name, city, pool, childactivity, eveningevents,
              WHEN room_type = 'Double' THEN double_room
              WHEN room_type = 'Quad' THEN quad_room
              WHEN room_type = 'King' THEN queen_room
-       		END) AS room_prize,
+       		END) AS room_price,
 IFNULL(reservation.checkin_date, '2020-05-31') AS checkin_date,
 IFNULL(reservation.checkout_date, '2020-05-31') AS checkout_date
 FROM room
@@ -430,8 +474,8 @@ JOIN hotel
 ON room.hotel_id = hotel.id
 LEFT JOIN reservation
 ON room.id = reservation.room_id
-LEFT JOIN prize
-ON prize.hotel_id = hotel.id
+LEFT JOIN price
+ON price.hotel_id = hotel.id
 
 
 

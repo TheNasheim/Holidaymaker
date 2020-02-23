@@ -7,17 +7,17 @@ public class Room {
     private int id;
     private String room_Type;
     private int hotel_Id;
-    private double room_Prize;
+    private double room_Price;
     private double extra_Bed;
     private double breakfast;
     private double half_broad;
     private double full_broad;
 
-    public Room(int id, String room_Type, int hotel_Id, double room_Prize, double extra_Bed, double breakfast, double half_broad, double full_broad) {
+    public Room(int id, String room_Type, int hotel_Id, double room_Price, double extra_Bed, double breakfast, double half_broad, double full_broad) {
         this.id = id;
         this.room_Type = room_Type;
         this.hotel_Id = hotel_Id;
-        this.room_Prize = room_Prize;
+        this.room_Price = room_Price;
         this.extra_Bed = extra_Bed;
         this.breakfast = breakfast;
         this.half_broad = half_broad;
@@ -36,8 +36,8 @@ public class Room {
         return hotel_Id;
     }
 
-    public double getRoom_Prize() {
-        return room_Prize;
+    public double getRoom_Price() {
+        return room_Price;
     }
 
     public double getExtra_Bed() {

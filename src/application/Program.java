@@ -8,9 +8,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
+import javafx.scene.control.ToggleGroup;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
@@ -32,33 +35,31 @@ public class Program {
     public TextField txtCenter;
     public ComboBox cbLocation;
     public TableView tvListofRooms;
+    public TableView tvListofBookedRooms;
+    public TextField txtBookGuests;
+    public RadioButton rbBR;
+    public RadioButton rbFB;
+    public RadioButton rbHB;
+    public CheckBox cbExtraBed;
+    public RadioButton rbNA;
+    public Label lblTotprice;
+    public TableView tvListofRateHotels;
 
+    private ToggleGroup tg = new ToggleGroup();
 
     public void initializeGUI() {
         Database.connect();
         tv_Customers();
         fill_tv_Customers("", "");
+        fill_cb_Location();
         tv_Hotels();
-        fill_tv_Hotels();
+        fill_tv_Hotels("Show All");
         tv_Rooms();
         tvListofRooms.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
+        fixRadioButtons();
         fixDatePickers();
-        fill_cb_Location();
     }
 
-
-
-    private void fixDatePickers(){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String startDate = "2020-06-01";
-        String endDate = "2020-07-31";
-        dpStartDate.valueProperty().addListener((ov, oldValue, newValue) -> {
-            dpEndDate.setValue(newValue);
-            restrictDatePicker(dpEndDate, newValue,LocalDate.parse(endDate));
-        });
-        restrictDatePicker(dpStartDate, LocalDate.parse(startDate),LocalDate.parse(endDate));
-    }
 
     // region TabelViews
     //
@@ -168,9 +169,9 @@ public class Program {
         TableColumn<Room, String> column3 = new TableColumn<>("Room Type");
         column3.setPrefWidth(84f);
         column3.setCellValueFactory(new PropertyValueFactory<>("room_Type"));
-        TableColumn<Room, Double> column4 = new TableColumn<>("Prize / Night");
+        TableColumn<Room, Double> column4 = new TableColumn<>("price / Night");
         column4.setPrefWidth(84f);
-        column4.setCellValueFactory(new PropertyValueFactory<>("room_Prize"));
+        column4.setCellValueFactory(new PropertyValueFactory<>("room_Price"));
         TableColumn<Room, Double> column5 = new TableColumn<>("Extra bed");
         column5.setPrefWidth(84f);
         column5.setCellValueFactory(new PropertyValueFactory<>("extra_Bed"));
@@ -206,12 +207,20 @@ public class Program {
         tvListofCustomers.getSelectionModel().selectFirst();
     }
 
-    private void fill_tv_Hotels() {
-
+    private void fill_tv_Hotels(String Location) {
+        if(validate(txtBeach.getText()) && validate(txtCenter.getText())) {
+            tvListofHotels.getItems().clear();
+            ArrayList<Hotel> hotels = Database.getHotelbyRequest(cbLocation.getSelectionModel().getSelectedItem().toString(), cbPool.isSelected(), cbChildActivity.isSelected(), cbEveningEvent.isSelected(), Integer.parseInt(txtBeach.getText()), Integer.parseInt(txtCenter.getText()));
+            if (hotels.size() > 0) {
+                for (Hotel hotel : hotels) {
+                    tvListofHotels.getItems().add(hotel);
+                }
+            tvListofHotels.getSelectionModel().selectFirst();
+            }
+        }
     }
 
     private void fill_cb_Location(){
-
         ObservableList<String> locations = Database.getAllHotelLocations();
         cbLocation.setItems(locations);
         cbLocation.getSelectionModel().selectFirst();
@@ -219,9 +228,6 @@ public class Program {
 
 
 
-    private void setStatus(String strStatus){
-        lblStatus1.setText("Status: " + strStatus);
-    }
 
     // endregion
 
@@ -241,15 +247,11 @@ public class Program {
     }
 
     public void btnFindHotels(ActionEvent actionEvent) {
-        if(validate(txtBeach.getText()) && validate(txtCenter.getText())) {
-            tvListofHotels.getItems().clear();
-            ArrayList<Hotel> hotels = Database.getHotelbyRequest(cbLocation.getSelectionModel().getSelectedItem().toString(), cbPool.isSelected(), cbChildActivity.isSelected(), cbEveningEvent.isSelected(), Integer.parseInt(txtBeach.getText()), Integer.parseInt(txtCenter.getText()));
-            if (hotels.size() > 0) {
-                for (Hotel hotel : hotels) {
-                    tvListofHotels.getItems().add(hotel);
-                }
-            }
-        }
+        fill_tv_Hotels(cbLocation.getSelectionModel().getSelectedItem().toString());
+    }
+
+    public void btnUpdateBookedRooms(ActionEvent actionEvent) {
+
     }
 
     // Was a extra feature on my mind that I had no time to fix. - Display how many rooms hotel had in total in another tabel.
@@ -262,8 +264,9 @@ public class Program {
             }
         } */
     }
+    // endregion
 
-
+    // region Btn Find Vacant Rooms
     public void btnFindRooms(ActionEvent actionEvent) {
         if(tvListofHotels.getSelectionModel().getSelectedItem() != null) {
             Hotel selectedhotel = (Hotel) tvListofHotels.getSelectionModel().getSelectedItem();
@@ -277,6 +280,43 @@ public class Program {
         }
     }
 
+    public void btnBookRooms(ActionEvent actionEvent) {
+        if(tvListofCustomers.getSelectionModel().getSelectedItem() != null) {
+            Customer customer = (Customer) tvListofCustomers.getSelectionModel().getSelectedItem();
+            ObservableList selectedItems = tvListofRooms.getSelectionModel().getSelectedItems();
+
+            ArrayList<Reservation> reservations = new ArrayList<>();
+            Period period = Period.between(dpStartDate.getValue(), dpEndDate.getValue().plusDays(1));
+            RadioButton rb_Selected = (RadioButton)tg.getSelectedToggle();
+            Double total_price = 0.0;
+            String extra_bed = "false";
+            String board = "none";
+            int diff = period.getDays();
+            for (Object room : selectedItems) {
+                Double price = ((Room)room).getRoom_Price() * diff;
+                if(rb_Selected.getText().contains("Breakfast")) {
+                    price += ((Room) room).getBreakfast() * diff;
+                    board = "breakfast";
+                }
+                if(rb_Selected.getText().contains("Half Broad")) {
+                    price += ((Room) room).getHalf_broad() * diff;
+                    board = "half";
+                }
+                if(rb_Selected.getText().contains("Full Broad")) {
+                    price += ((Room) room).getFull_broad() * diff;
+                    board = "full";
+                }
+                if(cbExtraBed.isSelected()){
+                    price += ((Room)room).getExtra_Bed() * diff;
+                    extra_bed ="true";
+                }
+                reservations.add(new Reservation(0, 0, ((Room)room).getId(), dpStartDate.getValue(), dpEndDate.getValue(), extra_bed, board, price ));
+                total_price += price;
+            }
+            lblTotprice.setText("Total price: " + total_price.toString());
+            Database.addReservation(customer.getId(), Integer.parseInt(txtBookGuests.getText()), reservations);
+        }
+    }
     // endregion
 
     private boolean checkNameFields(){
@@ -299,7 +339,7 @@ public class Program {
         return text.matches("[0-9]");
     }
 
-    public void restrictDatePicker(DatePicker datePicker, LocalDate minDate, LocalDate maxDate) {
+    private void restrictDatePicker(DatePicker datePicker, LocalDate minDate, LocalDate maxDate) {
         final Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() {
             @Override
             public DateCell call(final DatePicker datePicker) {
@@ -322,5 +362,29 @@ public class Program {
         datePicker.setValue(minDate);
     }
 
+
+    private void setStatus(String strStatus){
+        lblStatus1.setText("Status: " + strStatus);
+    }
+
+    private void fixDatePickers(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String startDate = "2020-06-01";
+        String endDate = "2020-07-31";
+        dpStartDate.valueProperty().addListener((ov, oldValue, newValue) -> {
+            dpEndDate.setValue(newValue);
+            restrictDatePicker(dpEndDate, newValue,LocalDate.parse(endDate));
+        });
+        restrictDatePicker(dpStartDate, LocalDate.parse(startDate),LocalDate.parse(endDate));
+    }
+
+    private void fixRadioButtons(){
+
+        rbBR.setToggleGroup(tg);
+        rbFB.setToggleGroup(tg);
+        rbHB.setToggleGroup(tg);
+        rbNA.setToggleGroup(tg);
+        rbNA.setSelected(true);
+    }
 
 }

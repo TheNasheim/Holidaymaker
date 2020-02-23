@@ -45,5 +45,35 @@
         <TextField fx:id="txtCenter" layoutX="320.0" layoutY="490.0" prefHeight="25.0" prefWidth="100.0" text="0" />
 
         <Button layoutX="350.0" layoutY="550.0" mnemonicParsing="false" onAction="#btnAddHotel" prefHeight="25.0" prefWidth="81.0" text="Add hotel" />
+
+
+        <Rectangle arcHeight="15.0" arcWidth="15.0" fill="WHITE" height="265.0" layoutX="450.0" layoutY="315.0" stroke="BLACK" strokeType="INSIDE" width="270.0" />
+        <Label layoutX="460.0" layoutY="325.0" text="Single Price" />
+        <TextField fx:id="txtSingle_Price" layoutX="460.0" layoutY="340.0" prefHeight="25.0" prefWidth="60.0" text="0" />
+        <Label layoutX="460.0" layoutY="367.0" text="Double Price" />
+        <TextField fx:id="txtDouble_Price" layoutX="460.0" layoutY="382.0" prefHeight="25.0" prefWidth="60.0" text="0" />
+        <Label layoutX="460.0" layoutY="409.0" text="Quad Price" />
+        <TextField fx:id="txtQuad_Price" layoutX="460.0" layoutY="424.0" prefHeight="25.0" prefWidth="60.0" text="0" />
+        <Label layoutX="460.0" layoutY="451.0" text="Queen Price" />
+        <TextField fx:id="txtQueen_Price" layoutX="460.0" layoutY="466.0" prefHeight="25.0" prefWidth="60.0" text="0" />
+        <Label layoutX="460.0" layoutY="493.0" text="King Price" />
+        <TextField fx:id="txtKing_Price" layoutX="460.0" layoutY="508.0" prefHeight="25.0" prefWidth="60.0" text="0" />
+
+        <Label layoutX="540.0" layoutY="325.0" text="Extra Bed" />
+        <TextField fx:id="txtExtra_Bed_Price" layoutX="540.0" layoutY="340.0" prefHeight="25.0" prefWidth="60.0" text="0" />
+        <Label layoutX="540.0" layoutY="367.0" text="Breakfast" />
+        <TextField fx:id="txtBreakfast_Price" layoutX="540.0" layoutY="382.0" prefHeight="25.0" prefWidth="60.0" text="0" />
+        <Label layoutX="630.0" layoutY="325.0" text="Half Broad" />
+        <TextField fx:id="txtHalf_Broad_Price" layoutX="630.0" layoutY="340.0" prefHeight="25.0" prefWidth="60.0" text="0" />
+        <Label layoutX="630.0" layoutY="367.0" text="Full Broad" />
+        <TextField fx:id="txtFull_Broad_Price" layoutX="630.0" layoutY="382.0" prefHeight="25.0" prefWidth="60.0" text="0" />
+
+        <Label layoutX="540.0" layoutY="430.0" text="Start Date" />
+        <DatePicker fx:id="dpStartDate" layoutX="540.0" layoutY="445.0" />
+        <Label layoutX="540.0" layoutY="470.0" text="End Date" />
+        <DatePicker fx:id="dpEndDate" layoutX="540.0" layoutY="485.0" />
+
+        <Button layoutX="500.0" layoutY="550.0" mnemonicParsing="false" onAction="#btnAddPricetoHotel" prefHeight="25.0" prefWidth="171.0" text="Add Prices to selected hotel" />
+
     </children>
 </AnchorPane>

@@ -1,0 +1,15 @@
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+
+<AnchorPane prefHeight="580.0" prefWidth="830.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.AddRating">
+    <children>
+        <TableView fx:id="tvListofRatingHotels" layoutX="10.0" layoutY="10.0" prefHeight="500.0" prefWidth="810.0" />
+        <Button layoutX="750.0" layoutY="521.0" mnemonicParsing="false" onAction="#btnUpdateHotelRatingTV" prefHeight="25.0" prefWidth="70.0" text="Update" />
+        <Rectangle arcHeight="15.0" arcWidth="15.0" fill="WHITE" height="40.0" layoutX="280.0" layoutY="532.0" stroke="BLACK" strokeType="INSIDE" width="280.0" />
+        <TextField fx:id="txtRating" layoutX="300.0" layoutY="540.0" prefHeight="25.0" prefWidth="40.0" text="0" />
+        <Button layoutX="350.0" layoutY="540.0" mnemonicParsing="false" onAction="#btnAddRating" prefHeight="25.0" prefWidth="190.0" text="Add rating to selected hotel" />
+    </children>
+</AnchorPane>
+

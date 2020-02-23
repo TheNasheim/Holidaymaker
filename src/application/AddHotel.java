@@ -5,7 +5,10 @@ import application.tables.Hotel;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.util.Callback;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class AddHotel {
@@ -28,11 +31,19 @@ public class AddHotel {
     public CheckBox cbEveningEvent;
     public TextField txtBeach;
     public TextField txtCenter;
-
-
+    public TextField txtSingle_Price;
+    public DatePicker dpStartDate;
+    public DatePicker dpEndDate;
+    public TextField txtKing_Price;
+    public TextField txtQueen_Price;
+    public TextField txtQuad_Price;
+    public TextField txtDouble_Price;
+    public TextField txtExtra_Bed_Price;
+    public TextField txtBreakfast_Price;
+    public TextField txtHalf_Broad_Price;
+    public TextField txtFull_Broad_Price;
 
     public void btnAddHotel(ActionEvent actionEvent) {
-
         if(checkHotelAddressFields() && validate(txtBeach.getText()) && validate(txtCenter.getText())) {
             Hotel hotel = new Hotel(0, txtHotelName.getText(),
                     txtHotelAddress.getText(),
@@ -61,7 +72,7 @@ public class AddHotel {
                 if(validate(txtHotelKing.getText()))
                     addRoomtoHotel(id, Integer.parseInt(txtHotelKing.getText()), "King");
             }
-            resetFields();
+            resetHotelFields();
         }
     }
 
@@ -71,7 +82,7 @@ public class AddHotel {
         }
     }
 
-    private void resetFields() {
+    private void resetHotelFields() {
         txtHotelName.setText("");
         txtHotelAddress.setText("");
         txtHotelZip.setText("");
@@ -88,9 +99,35 @@ public class AddHotel {
         txtHotelKing.setText("");
     }
 
+    private void resetPriceFields() {
+        txtSingle_Price.setText("0");
+        txtDouble_Price.setText("0");
+        txtQuad_Price.setText("0");
+        txtQueen_Price.setText("0");
+        txtKing_Price.setText("0");
+        txtExtra_Bed_Price.setText("0");
+        txtBreakfast_Price.setText("0");
+        txtHalf_Broad_Price.setText("0");
+        txtFull_Broad_Price.setText("0");
+    }
+
     public void btnUpdateHotelTV(ActionEvent actionEvent) {
         tv_Hotels();
         fillHotelTV();
+        fixDatePickers();
+        dpEndDate.setValue(LocalDate.parse("2020-07-31"));
+    }
+
+    private void fixDatePickers(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String startDate = "2020-06-01";
+        String endDate = "2020-07-31";
+        dpStartDate.valueProperty().addListener((ov, oldValue, newValue) -> {
+            dpEndDate.setValue(newValue);
+            restrictDatePicker(dpEndDate, newValue, LocalDate.parse(endDate));
+        });
+        restrictDatePicker(dpStartDate, LocalDate.parse(startDate),LocalDate.parse(endDate));
+
     }
 
     private void tv_Hotels() {
@@ -171,8 +208,6 @@ public class AddHotel {
     }
 
 
-
-
     private void fillHotelTV(){
         ArrayList<Hotel> hotels = Database.getHotelList("");
         if (hotels.size() > 0) {
@@ -193,7 +228,42 @@ public class AddHotel {
 
     private boolean validate(String text)
     {
-        return text.matches("[0-9]");
+        return text.matches("[0-9]*");
+    }
+
+    private void restrictDatePicker(DatePicker datePicker, LocalDate minDate, LocalDate maxDate) {
+        final Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() {
+            @Override
+            public DateCell call(final DatePicker datePicker) {
+                return new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item.isBefore(minDate)) {
+                            setDisable(true);
+                            setStyle("-fx-background-color: #ffc0cb;");
+                        }else if (item.isAfter(maxDate)) {
+                            setDisable(true);
+                            setStyle("-fx-background-color: #ffc0cb;");
+                        }
+                    }
+                };
+            }
+        };
+        datePicker.setDayCellFactory(dayCellFactory);
+        datePicker.setValue(minDate);
+    }
+
+    public void btnAddPricetoHotel(ActionEvent actionEvent) {
+
+
+    }
+
+    private boolean checkHotelPriceFields(){
+        if(validate(txtHotelSingle.getText()) || validate(txtHotelDouble.getText()) || validate(txtHotelQuad.getText()) || validate(txtHotelQueen.getText()) || validate(txtHotelKing.getText()) || validate(txtExtra_Bed_Price.getText()) || validate(txtBreakfast_Price.getText())|| validate(txtHalf_Broad_Price.getText())|| validate(txtFull_Broad_Price.getText())){
+            return false;
+        }
+        return true;
     }
 
 

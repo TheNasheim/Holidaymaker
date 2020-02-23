@@ -1,7 +1,5 @@
 package application.tables;
 
-import java.awt.desktop.AboutEvent;
-
 public class Room {
 
     private int id;
@@ -10,18 +8,18 @@ public class Room {
     private double room_Price;
     private double extra_Bed;
     private double breakfast;
-    private double half_broad;
-    private double full_broad;
+    private double half_board;
+    private double full_board;
 
-    public Room(int id, String room_Type, int hotel_Id, double room_Price, double extra_Bed, double breakfast, double half_broad, double full_broad) {
+    public Room(int id, String room_Type, int hotel_Id, double room_Price, double extra_Bed, double breakfast, double half_board, double full_board) {
         this.id = id;
         this.room_Type = room_Type;
         this.hotel_Id = hotel_Id;
         this.room_Price = room_Price;
         this.extra_Bed = extra_Bed;
         this.breakfast = breakfast;
-        this.half_broad = half_broad;
-        this.full_broad = full_broad;
+        this.half_board = half_board;
+        this.full_board = full_board;
     }
 
     public int getId() {
@@ -48,12 +46,12 @@ public class Room {
         return breakfast;
     }
 
-    public double getHalf_broad() {
-        return half_broad;
+    public double getHalf_board() {
+        return half_board;
     }
 
-    public double getFull_broad() {
-        return full_broad;
+    public double getFull_board() {
+        return full_board;
     }
 
 }

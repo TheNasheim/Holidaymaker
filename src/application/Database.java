@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 
@@ -266,7 +267,7 @@ public class Database {
             "WHEN room_type = 'Quad' THEN quad_room " +
             "WHEN room_type = 'Queen' THEN queen_room " +
             "WHEN room_type = 'King' THEN king_room " +
-            "END) AS room_price, price.extra_bed, price.breakfast, half_broad, full_broad " +
+            "END) AS room_price, price.extra_bed, price.breakfast, half_board, full_board " +
             "FROM hotel " +
             "JOIN room " +
             "ON hotel.id = room.hotel_id " +
@@ -297,9 +298,9 @@ public class Database {
                 double room_price = resultSet.getDouble("room_price");
                 double extra_bed = resultSet.getDouble("extra_bed");
                 double breakfast = resultSet.getDouble("breakfast");
-                double half_broad = resultSet.getDouble("half_broad");
-                double full_broad = resultSet.getDouble("full_broad");
-                rooms.add(new Room(id, room_type, hotel_id, room_price,extra_bed, breakfast, half_broad, full_broad));
+                double half_board = resultSet.getDouble("half_board");
+                double full_board = resultSet.getDouble("full_board");
+                rooms.add(new Room(id, room_type, hotel_id, room_price,extra_bed, breakfast, half_board, full_board));
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -311,7 +312,7 @@ public class Database {
     public static void addReservation(int customerId, int guests, ArrayList<Reservation> reservations){
         String query1 = "INSERT INTO booking SET customer_id = ?, guests = ?";
         String query2 = "SELECT id FROM booking ORDER BY id DESC LIMIT 1";
-        String query3 = "INSERT INTO reservation SET booking_id = ?, room_id = ?, checkin_date = ?, checkiout_date = ?, extra_bed = ?, board = ?, price = ?";
+        String query3 = "INSERT INTO reservation SET booking_id = ?, room_id = ?, checkin_date = ?, checkout_date = ?, extra_bed = ?, board = ?, price = ?";
         int bookingId = 0;
         try {
             statement = conn.prepareStatement(query1);
@@ -326,7 +327,7 @@ public class Database {
             }
             for(Reservation reservation : reservations) {
                 statement = conn.prepareStatement(query3);
-                statement.setInt(1, reservation.getBooking_Id());
+                statement.setInt(1, bookingId);
                 statement.setInt(2, reservation.getRoom_Id());
                 statement.setString(3, reservation.getCheckin_date().toString());
                 statement.setString(4, reservation.getCheckout_date().toString());
@@ -338,12 +339,32 @@ public class Database {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
-
-
-
-
     }
+
+    public static  ArrayList<Reservation> getReservation() {
+        ArrayList<Reservation> reservations = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        try {
+            statement = conn.prepareStatement("SELECT * FROM reservation ORDER BY booking_id");
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                int booking_id = resultSet.getInt("booking_id");
+                int hotel_id = resultSet.getInt("room_id");
+                String checkin_date = resultSet.getString("checkin_date");
+                String checkout_date = resultSet.getString("checkout_date");
+                String extra_bed = resultSet.getString("extra_bed");
+                String board = resultSet.getString("board");
+                double room_price = resultSet.getDouble("price");
+                reservations.add(new Reservation(id, booking_id, hotel_id, LocalDate.parse(checkin_date, formatter), LocalDate.parse(checkout_date, formatter), extra_bed, board, room_price));
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return reservations;
+    }
+
+
 
     public static void test() {
         try {
@@ -373,7 +394,6 @@ public class Database {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            //return "Something is wrong! Customer was not added.";
         }
     }
 
@@ -390,7 +410,7 @@ public class Database {
 
     public static void addPricetoHotel(Price price) {
         try {
-            statement = conn.prepareStatement("INSERT INTO price SET hotel_id = ?, start_date = ?, end_date = ?, single_room = ?, double_room = ?, quad_room = ?, queen_room = ?, king_room = ?, extra_bed = ?, breakfast = ?, half_broad = ?, full_broad = ?");
+            statement = conn.prepareStatement("INSERT INTO price SET hotel_id = ?, start_date = ?, end_date = ?, single_room = ?, double_room = ?, quad_room = ?, queen_room = ?, king_room = ?, extra_bed = ?, breakfast = ?, half_board = ?, full_board = ?");
             statement.setInt(1, price.getHotel_id());
             statement.setString(2, price.getStart_date().toString());
             statement.setString(3, price.getEnd_date().toString());
@@ -400,8 +420,9 @@ public class Database {
             statement.setDouble(7, price.getQueen_room());
             statement.setDouble(8, price.getKing_room());
             statement.setDouble(9, price.getExtra_bed());
-            statement.setDouble(10, price.getHalf_broad());
-            statement.setDouble(11, price.getFull_broad());
+            statement.setDouble(10, price.getBreakfast());
+            statement.setDouble(11, price.getHalf_board());
+            statement.setDouble(12, price.getFull_board());
             statement.executeUpdate();
         } catch (Exception ex) {
             ex.printStackTrace();

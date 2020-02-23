@@ -8,7 +8,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 import javafx.scene.control.ToggleGroup;
 
@@ -35,7 +34,7 @@ public class Program {
     public TextField txtCenter;
     public ComboBox cbLocation;
     public TableView tvListofRooms;
-    public TableView tvListofBookedRooms;
+    public TableView tvListofReservation;
     public TextField txtBookGuests;
     public RadioButton rbBR;
     public RadioButton rbFB;
@@ -44,6 +43,7 @@ public class Program {
     public RadioButton rbNA;
     public Label lblTotprice;
     public TableView tvListofRateHotels;
+
 
     private ToggleGroup tg = new ToggleGroup();
 
@@ -55,6 +55,7 @@ public class Program {
         tv_Hotels();
         fill_tv_Hotels("Show All");
         tv_Rooms();
+        tv_Reservations();
         tvListofRooms.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         fixRadioButtons();
         fixDatePickers();
@@ -178,12 +179,12 @@ public class Program {
         TableColumn<Room, Double> column6 = new TableColumn<>("Breakfast");
         column6.setPrefWidth(84f);
         column6.setCellValueFactory(new PropertyValueFactory<>("breakfast"));
-        TableColumn<Room, Double> column7 = new TableColumn<>("Half broad");
+        TableColumn<Room, Double> column7 = new TableColumn<>("Half board");
         column7.setPrefWidth(84f);
-        column7.setCellValueFactory(new PropertyValueFactory<>("half_broad"));
-        TableColumn<Room, Double> column8 = new TableColumn<>("Full broad");
+        column7.setCellValueFactory(new PropertyValueFactory<>("half_board"));
+        TableColumn<Room, Double> column8 = new TableColumn<>("Full board");
         column8.setPrefWidth(84f);
-        column8.setCellValueFactory(new PropertyValueFactory<>("full_broad"));
+        column8.setCellValueFactory(new PropertyValueFactory<>("full_board"));
         tvListofRooms.getColumns().add(column1);
         tvListofRooms.getColumns().add(column2);
         tvListofRooms.getColumns().add(column3);
@@ -193,6 +194,43 @@ public class Program {
         tvListofRooms.getColumns().add(column7);
         tvListofRooms.getColumns().add(column8);
     }
+
+    public void tv_Reservations() {
+        TableColumn<Reservation, String> column1 = new TableColumn<>("ID");
+        column1.setPrefWidth(40f);
+        column1.setCellValueFactory(new PropertyValueFactory<>("id"));
+        TableColumn<Reservation, String> column2 = new TableColumn<>("Hotel Id");
+        column2.setPrefWidth(40f);
+        column2.setCellValueFactory(new PropertyValueFactory<>("Booking_Id"));
+        TableColumn<Reservation, String> column3 = new TableColumn<>("Room Id");
+        column3.setPrefWidth(40f);
+        column3.setCellValueFactory(new PropertyValueFactory<>("Room_Id"));
+        TableColumn<Reservation, String> column4 = new TableColumn<>("Checkin Date");
+        column4.setPrefWidth(120f);
+        column4.setCellValueFactory(new PropertyValueFactory<>("checkin_date"));
+        TableColumn<Reservation, String> column5 = new TableColumn<>("Checkout Date");
+        column5.setPrefWidth(120f);
+        column5.setCellValueFactory(new PropertyValueFactory<>("checkout_date"));
+        TableColumn<Reservation, String> column6 = new TableColumn<>("Extra Bed");
+        column6.setPrefWidth(100f);
+        column6.setCellValueFactory(new PropertyValueFactory<>("extra_bed"));
+        TableColumn<Reservation, String> column7 = new TableColumn<>("Board");
+        column7.setPrefWidth(100f);
+        column7.setCellValueFactory(new PropertyValueFactory<>("board"));
+        TableColumn<Reservation, String> column8 = new TableColumn<>("Price");
+        column8.setPrefWidth(100f);
+        column8.setCellValueFactory(new PropertyValueFactory<>("price"));
+        tvListofReservation.getColumns().add(column1);
+        tvListofReservation.getColumns().add(column2);
+        tvListofReservation.getColumns().add(column3);
+        tvListofReservation.getColumns().add(column4);
+        tvListofReservation.getColumns().add(column5);
+        tvListofReservation.getColumns().add(column6);
+        tvListofReservation.getColumns().add(column7);
+        tvListofReservation.getColumns().add(column8);
+    }
+
+
     // endregion
 
     // region Fill TableViews
@@ -226,7 +264,16 @@ public class Program {
         cbLocation.getSelectionModel().selectFirst();
     }
 
-
+    public void fill_tv_RoomReservation() {
+        tvListofReservation.getItems().clear();
+        ArrayList<Reservation> reservations = Database.getReservation();
+        if (reservations.size() > 0) {
+            for (Reservation reservation : reservations) {
+                tvListofReservation.getItems().add(reservation);
+            }
+            tvListofReservation.getSelectionModel().selectFirst();
+        }
+    }
 
 
     // endregion
@@ -250,9 +297,11 @@ public class Program {
         fill_tv_Hotels(cbLocation.getSelectionModel().getSelectedItem().toString());
     }
 
-    public void btnUpdateBookedRooms(ActionEvent actionEvent) {
-
+    public void btnUpdateRoomReservation(ActionEvent actionEvent) {
+        fill_tv_RoomReservation();
     }
+
+
 
     // Was a extra feature on my mind that I had no time to fix. - Display how many rooms hotel had in total in another tabel.
     public void onListofHotels_Click(MouseEvent mouseEvent) {
@@ -298,12 +347,12 @@ public class Program {
                     price += ((Room) room).getBreakfast() * diff;
                     board = "breakfast";
                 }
-                if(rb_Selected.getText().contains("Half Broad")) {
-                    price += ((Room) room).getHalf_broad() * diff;
+                if(rb_Selected.getText().contains("Half board")) {
+                    price += ((Room) room).getHalf_board() * diff;
                     board = "half";
                 }
-                if(rb_Selected.getText().contains("Full Broad")) {
-                    price += ((Room) room).getFull_broad() * diff;
+                if(rb_Selected.getText().contains("Full board")) {
+                    price += ((Room) room).getFull_board() * diff;
                     board = "full";
                 }
                 if(cbExtraBed.isSelected()){
@@ -379,7 +428,6 @@ public class Program {
     }
 
     private void fixRadioButtons(){
-
         rbBR.setToggleGroup(tg);
         rbFB.setToggleGroup(tg);
         rbHB.setToggleGroup(tg);

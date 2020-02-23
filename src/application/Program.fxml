@@ -64,8 +64,8 @@
 
                             <RadioButton fx:id="rbNA" mnemonicParsing="false" layoutX="240.0" layoutY="430.0" text="No Extras" />
                             <RadioButton fx:id="rbBR" mnemonicParsing="false" layoutX="240.0" layoutY="455.0" text="Breakfast" />
-                            <RadioButton fx:id="rbHB" mnemonicParsing="false" layoutX="240.0" layoutY="480.0" text="Half Broad" />
-                            <RadioButton fx:id="rbFB" mnemonicParsing="false" layoutX="240.0" layoutY="505.0" text="Full Broad" />
+                            <RadioButton fx:id="rbHB" mnemonicParsing="false" layoutX="240.0" layoutY="480.0" text="Half Board" />
+                            <RadioButton fx:id="rbFB" mnemonicParsing="false" layoutX="240.0" layoutY="505.0" text="Full Board" />
 
                             <CheckBox fx:id="cbExtraBed" layoutX="240.0" layoutY="530.0" mnemonicParsing="false" text="Extra Bed" />
                             <Label layoutX="325.0" layoutY="425.0" text="How many guests" />
@@ -73,17 +73,17 @@
 
                             <Rectangle arcHeight="15.0" arcWidth="15.0" fill="WHITE" height="130.0" layoutX="450.0" layoutY="425.0" stroke="BLACK" strokeType="INSIDE" width="160.0" />
                             <Button layoutX="460.0" layoutY="500.0" mnemonicParsing="false" onAction="#btnBookRooms" prefWidth="140.0" text="Book selected rooms" />
-                            <Label fx:id="lblTotPrize" layoutX="460.0" layoutY="530.0" text="Total Prize: 0" />
+                            <Label fx:id="lblTotprice" layoutX="460.0" layoutY="530.0" text="Total Price: 0" />
                         </children>
                     </AnchorPane>
                 </Tab>
                   <Tab text="Edit Room Booking">
                       <AnchorPane prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: white;">
                           <children>
-                              <TableView fx:id="tvListofBookedRooms" layoutX="10.0" layoutY="10.0" prefHeight="410.0" prefWidth="810.0" />
+                              <TableView fx:id="tvListofReservation" layoutX="10.0" layoutY="10.0" prefHeight="410.0" prefWidth="810.0" />
 
                               <Rectangle arcHeight="15.0" arcWidth="15.0" fill="WHITE" height="130.0" layoutX="10.0" layoutY="425.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
-                              <Button layoutX="720.0" layoutY="430.0" mnemonicParsing="false" onAction="#btnUpdateBookedRooms" prefWidth="100.0" text="Update Table" />
+                              <Button layoutX="720.0" layoutY="430.0" mnemonicParsing="false" onAction="#btnUpdateRoomReservation" prefWidth="100.0" text="Update Table" />
                           </children>
                       </AnchorPane>
                   </Tab>

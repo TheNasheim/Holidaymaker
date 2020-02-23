@@ -2,6 +2,7 @@ package application;
 
 import application.tables.Customer;
 import application.tables.Hotel;
+import application.tables.Price;
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -115,13 +116,12 @@ public class AddHotel {
         tv_Hotels();
         fillHotelTV();
         fixDatePickers();
-        dpEndDate.setValue(LocalDate.parse("2020-07-31"));
+        dpEndDate.setValue(LocalDate.parse("2020-08-01"));
     }
 
     private void fixDatePickers(){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String startDate = "2020-06-01";
-        String endDate = "2020-07-31";
+        String endDate = "2020-08-01";
         dpStartDate.valueProperty().addListener((ov, oldValue, newValue) -> {
             dpEndDate.setValue(newValue);
             restrictDatePicker(dpEndDate, newValue, LocalDate.parse(endDate));
@@ -255,15 +255,31 @@ public class AddHotel {
     }
 
     public void btnAddPricetoHotel(ActionEvent actionEvent) {
-
+        if (checkHotelPriceFields() && tvListofHotels.getSelectionModel().getSelectedItem() != null) {
+            int hotel_id = ((Hotel)tvListofHotels.getSelectionModel().getSelectedItem()).getId();
+            Price price = new Price(hotel_id,
+                    (LocalDate)dpStartDate.getValue(),
+                    (LocalDate)dpEndDate.getValue(),
+                    Double.parseDouble(txtSingle_Price.getText()),
+                    Double.parseDouble(txtDouble_Price.getText()),
+                    Double.parseDouble(txtQuad_Price.getText()),
+                    Double.parseDouble(txtQueen_Price.getText()),
+                    Double.parseDouble(txtKing_Price.getText()),
+                    Double.parseDouble(txtExtra_Bed_Price.getText()),
+                    Double.parseDouble(txtBreakfast_Price.getText()),
+                    Double.parseDouble(txtHalf_Broad_Price.getText()),
+                    Double.parseDouble(txtFull_Broad_Price.getText()));
+            Database.addPricetoHotel(price);
+            resetPriceFields();
+        }
 
     }
 
     private boolean checkHotelPriceFields(){
         if(validate(txtHotelSingle.getText()) || validate(txtHotelDouble.getText()) || validate(txtHotelQuad.getText()) || validate(txtHotelQueen.getText()) || validate(txtHotelKing.getText()) || validate(txtExtra_Bed_Price.getText()) || validate(txtBreakfast_Price.getText())|| validate(txtHalf_Broad_Price.getText())|| validate(txtFull_Broad_Price.getText())){
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
 

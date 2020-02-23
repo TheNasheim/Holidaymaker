@@ -13,10 +13,10 @@ public class Price {
     private double king_room;
     private double extra_bed;
     private double breakfast;
-    private double half_broad;
-    private double full_broad;
+    private double half_board;
+    private double full_board;
 
-    public Price(int hotel_id, LocalDate start_date, LocalDate end_date, double single_room, double double_room, double quad_room, double queen_room, double king_room, double extra_bed, double breakfast, double half_broad, double full_broad) {
+    public Price(int hotel_id, LocalDate start_date, LocalDate end_date, double single_room, double double_room, double quad_room, double queen_room, double king_room, double extra_bed, double breakfast, double half_board, double full_board) {
         this.hotel_id = hotel_id;
         this.start_date = start_date;
         this.end_date = end_date;
@@ -27,8 +27,8 @@ public class Price {
         this.king_room = king_room;
         this.extra_bed = extra_bed;
         this.breakfast = breakfast;
-        this.half_broad = half_broad;
-        this.full_broad = full_broad;
+        this.half_board = half_board;
+        this.full_board = full_board;
     }
 
     public int getHotel_id() {
@@ -71,11 +71,11 @@ public class Price {
         return breakfast;
     }
 
-    public double getHalf_broad() {
-        return half_broad;
+    public double getHalf_board() {
+        return half_board;
     }
 
-    public double getFull_broad() {
-        return full_broad;
+    public double getFull_board() {
+        return full_board;
     }
 }

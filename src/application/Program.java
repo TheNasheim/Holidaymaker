@@ -43,6 +43,14 @@ public class Program {
     public RadioButton rbNA;
     public Label lblTotprice;
     public TableView tvListofRateHotels;
+    public DatePicker dpEditStartDate;
+    public DatePicker dpEditEndDate;
+    public RadioButton rbEditNA;
+    public RadioButton rbEditBR;
+    public RadioButton rbEditHB;
+    public RadioButton rbEditFB;
+    public CheckBox cbEditExtraBed;
+    public Label lblEditTotprice;
 
 
     private ToggleGroup tg = new ToggleGroup();
@@ -199,11 +207,11 @@ public class Program {
         TableColumn<Reservation, String> column1 = new TableColumn<>("ID");
         column1.setPrefWidth(40f);
         column1.setCellValueFactory(new PropertyValueFactory<>("id"));
-        TableColumn<Reservation, String> column2 = new TableColumn<>("Hotel Id");
-        column2.setPrefWidth(40f);
+        TableColumn<Reservation, String> column2 = new TableColumn<>("Booking Id");
+        column2.setPrefWidth(80f);
         column2.setCellValueFactory(new PropertyValueFactory<>("Booking_Id"));
         TableColumn<Reservation, String> column3 = new TableColumn<>("Room Id");
-        column3.setPrefWidth(40f);
+        column3.setPrefWidth(80f);
         column3.setCellValueFactory(new PropertyValueFactory<>("Room_Id"));
         TableColumn<Reservation, String> column4 = new TableColumn<>("Checkin Date");
         column4.setPrefWidth(120f);
@@ -264,9 +272,9 @@ public class Program {
         cbLocation.getSelectionModel().selectFirst();
     }
 
-    public void fill_tv_RoomReservation() {
+    public void fill_tv_RoomReservation(int customerId) {
         tvListofReservation.getItems().clear();
-        ArrayList<Reservation> reservations = Database.getReservation();
+        ArrayList<Reservation> reservations = Database.getReservation(customerId);
         if (reservations.size() > 0) {
             for (Reservation reservation : reservations) {
                 tvListofReservation.getItems().add(reservation);
@@ -296,12 +304,6 @@ public class Program {
     public void btnFindHotels(ActionEvent actionEvent) {
         fill_tv_Hotels(cbLocation.getSelectionModel().getSelectedItem().toString());
     }
-
-    public void btnUpdateRoomReservation(ActionEvent actionEvent) {
-        fill_tv_RoomReservation();
-    }
-
-
 
     // Was a extra feature on my mind that I had no time to fix. - Display how many rooms hotel had in total in another tabel.
     public void onListofHotels_Click(MouseEvent mouseEvent) {
@@ -366,6 +368,21 @@ public class Program {
             Database.addReservation(customer.getId(), Integer.parseInt(txtBookGuests.getText()), reservations);
         }
     }
+
+    public void btnUpdateRoomBooking(ActionEvent actionEvent) {
+        fill_tv_RoomReservation(0);
+    }
+
+    public void btnUpdateRoomBookingUser(ActionEvent actionEvent) {
+
+        fill_tv_RoomReservation(((Customer)tvListofCustomers.getSelectionModel().getSelectedItem()).getId());
+    }
+
+    public void onListofReservation_Click(MouseEvent mouseEvent) {
+        Customer customer = (Customer)tvListofCustomers.getSelectionModel().getSelectedItem();
+
+    }
+
     // endregion
 
     private boolean checkNameFields(){
@@ -434,5 +451,7 @@ public class Program {
         rbNA.setToggleGroup(tg);
         rbNA.setSelected(true);
     }
+
+
 
 }

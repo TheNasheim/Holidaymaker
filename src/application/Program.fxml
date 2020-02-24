@@ -62,10 +62,10 @@
 
                             <Rectangle arcHeight="15.0" arcWidth="15.0" fill="WHITE" height="130.0" layoutX="230.0" layoutY="425.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
 
-                            <RadioButton fx:id="rbNA" mnemonicParsing="false" layoutX="240.0" layoutY="430.0" text="No Extras" />
-                            <RadioButton fx:id="rbBR" mnemonicParsing="false" layoutX="240.0" layoutY="455.0" text="Breakfast" />
-                            <RadioButton fx:id="rbHB" mnemonicParsing="false" layoutX="240.0" layoutY="480.0" text="Half Board" />
-                            <RadioButton fx:id="rbFB" mnemonicParsing="false" layoutX="240.0" layoutY="505.0" text="Full Board" />
+                            <RadioButton fx:id="rbNA" layoutX="240.0" layoutY="430.0" mnemonicParsing="false" text="No Extras" />
+                            <RadioButton fx:id="rbBR" layoutX="240.0" layoutY="455.0" mnemonicParsing="false" text="Breakfast" />
+                            <RadioButton fx:id="rbHB" layoutX="240.0" layoutY="480.0" mnemonicParsing="false" text="Half Board" />
+                            <RadioButton fx:id="rbFB" layoutX="240.0" layoutY="505.0" mnemonicParsing="false" text="Full Board" />
 
                             <CheckBox fx:id="cbExtraBed" layoutX="240.0" layoutY="530.0" mnemonicParsing="false" text="Extra Bed" />
                             <Label layoutX="325.0" layoutY="425.0" text="How many guests" />
@@ -80,10 +80,38 @@
                   <Tab text="Edit Room Booking">
                       <AnchorPane prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: white;">
                           <children>
-                              <TableView fx:id="tvListofReservation" layoutX="10.0" layoutY="10.0" prefHeight="410.0" prefWidth="810.0" />
+                              <TableView fx:id="tvListofReservation" layoutX="10.0" layoutY="10.0" prefHeight="410.0" prefWidth="810.0" onMouseClicked="#onListofReservation_Click"  />
 
                               <Rectangle arcHeight="15.0" arcWidth="15.0" fill="WHITE" height="130.0" layoutX="10.0" layoutY="425.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
-                              <Button layoutX="720.0" layoutY="430.0" mnemonicParsing="false" onAction="#btnUpdateRoomReservation" prefWidth="100.0" text="Update Table" />
+                              <Label layoutX="20.0" layoutY="430.0" text="Start Date" />
+                              <DatePicker fx:id="dpEditStartDate" editable="false" layoutX="20.0" layoutY="445.0" />
+                              <Label layoutX="20.0" layoutY="470.0" text="End Date" />
+                              <DatePicker fx:id="dpEditEndDate" editable="false" layoutX="20.0" layoutY="485.0" />
+                              <Button layoutX="20.0" layoutY="520.0" mnemonicParsing="false" onAction="#btnFindRooms" prefWidth="140.0" text="Show available rooms" />
+
+                              <Rectangle arcHeight="15.0" arcWidth="15.0" fill="WHITE" height="130.0" layoutX="230.0" layoutY="425.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
+                              <RadioButton fx:id="rbEditNA" layoutX="240.0" layoutY="430.0" mnemonicParsing="false" text="No Extras" />
+                              <RadioButton fx:id="rbEditBR" layoutX="240.0" layoutY="455.0" mnemonicParsing="false" text="Breakfast" />
+                              <RadioButton fx:id="rbEditHB" layoutX="240.0" layoutY="480.0" mnemonicParsing="false" text="Half Board" />
+                              <RadioButton fx:id="rbEditFB" layoutX="240.0" layoutY="505.0" mnemonicParsing="false" text="Full Board" />
+
+                              <CheckBox fx:id="cbEditExtraBed" layoutX="240.0" layoutY="530.0" mnemonicParsing="false" text="Extra Bed" />
+
+                              <Rectangle arcHeight="15.0" arcWidth="15.0" fill="WHITE" height="130.0" layoutX="450.0" layoutY="425.0" stroke="BLACK" strokeType="INSIDE" width="170.0" />
+                              <Button layoutX="455.0" layoutY="440.0" mnemonicParsing="false" onAction="#btnBookRooms" prefWidth="160.0" text="Save changes selected room" />
+                              <Button layoutX="455.0" layoutY="470.0" mnemonicParsing="false" onAction="#btnBookRooms" prefWidth="160.0" text="Remove selected room" />
+                              <Button layoutX="455.0" layoutY="500.0" mnemonicParsing="false" onAction="#btnBookRooms" prefWidth="160.0" text="Remove selected booking" />
+                              <Label fx:id="lblEditTotprice" layoutX="460.0" layoutY="530.0" text="Total Price: 0" />
+
+
+
+
+                              <Button layoutX="700.0" layoutY="430.0" mnemonicParsing="false" onAction="#btnUpdateRoomBooking" prefWidth="120.0" text="Show all Rooms" />
+                              <Button layoutX="700.0" layoutY="460.0" mnemonicParsing="false" onAction="#btnUpdateRoomBookingUser" prefWidth="120.0" text="Show User Rooms" />
+
+
+
+
                           </children>
                       </AnchorPane>
                   </Tab>

@@ -19,7 +19,7 @@ public class Database {
     public static void connect() {
         try {
             
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/holidaymaker?user=holidaymaker&password=mysql&serverTimezone=UTC");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/holidaymaker?user=root&password=mysql&serverTimezone=UTC");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -341,11 +341,24 @@ public class Database {
         }
     }
 
-    public static  ArrayList<Reservation> getReservation() {
+    public static  ArrayList<Reservation> getReservation(int customerId) {
         ArrayList<Reservation> reservations = new ArrayList<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         try {
-            statement = conn.prepareStatement("SELECT * FROM reservation ORDER BY booking_id");
+            if(customerId == 0) {
+                statement = conn.prepareStatement("SELECT * FROM reservation ORDER BY booking_id");
+            }
+            else{
+                statement = conn.prepareStatement("SELECT reservation.id AS id, reservation.room_id, reservation.booking_id, reservation.checkin_date, reservation.checkout_date, reservation.extra_bed, reservation.board, reservation.price " +
+                        "FROM reservation " +
+                        "JOIN booking " +
+                        "ON booking.id = reservation.booking_id " +
+                        "LEFT JOIN customer " +
+                        "ON customer.id = booking.customer_id " +
+                        "WHERE customer.id = ? " +
+                        "ORDER BY reservation.booking_id");
+                statement.setInt(1, customerId);
+            }
             resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 int id = resultSet.getInt("id");

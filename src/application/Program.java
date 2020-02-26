@@ -54,6 +54,7 @@ public class Program {
 
 
     private ToggleGroup tg = new ToggleGroup();
+    private ToggleGroup tgEdit = new ToggleGroup();
 
     public void initializeGUI() {
         Database.connect();
@@ -107,7 +108,7 @@ public class Program {
             @Override
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
-                setText(empty ? null : item ? "YES" : "NO" );
+                setText(empty ? null : item ? "YES" : "NO");
             }
         });
         TableColumn<Hotel, Boolean> column10 = new TableColumn<>("Child Activity");
@@ -118,7 +119,7 @@ public class Program {
             @Override
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
-                setText(empty ? null : item ? "YES" : "NO" );
+                setText(empty ? null : item ? "YES" : "NO");
             }
         });
         TableColumn<Hotel, Boolean> column11 = new TableColumn<>("Evening Events");
@@ -129,7 +130,7 @@ public class Program {
             @Override
             protected void updateItem(Boolean item, boolean empty) {
                 super.updateItem(item, empty);
-                setText(empty ? null : item ? "YES" : "NO" );
+                setText(empty ? null : item ? "YES" : "NO");
             }
         });
         TableColumn<Hotel, Integer> column12 = new TableColumn<>("Beach");
@@ -254,19 +255,19 @@ public class Program {
     }
 
     private void fill_tv_Hotels(String Location) {
-        if(validate(txtBeach.getText()) && validate(txtCenter.getText())) {
+        if (validate(txtBeach.getText()) && validate(txtCenter.getText())) {
             tvListofHotels.getItems().clear();
             ArrayList<Hotel> hotels = Database.getHotelbyRequest(cbLocation.getSelectionModel().getSelectedItem().toString(), cbPool.isSelected(), cbChildActivity.isSelected(), cbEveningEvent.isSelected(), Integer.parseInt(txtBeach.getText()), Integer.parseInt(txtCenter.getText()));
             if (hotels.size() > 0) {
                 for (Hotel hotel : hotels) {
                     tvListofHotels.getItems().add(hotel);
                 }
-            tvListofHotels.getSelectionModel().selectFirst();
+                tvListofHotels.getSelectionModel().selectFirst();
             }
         }
     }
 
-    private void fill_cb_Location(){
+    private void fill_cb_Location() {
         ObservableList<String> locations = Database.getAllHotelLocations();
         cbLocation.setItems(locations);
         cbLocation.getSelectionModel().selectFirst();
@@ -290,7 +291,7 @@ public class Program {
     // Buttons & Click
     //
     public void btnAddCustomer(ActionEvent actionEvent) {
-        if(checkNameFields()) {
+        if (checkNameFields()) {
             String work = Database.addNewCustomer(txtFirstName.getText(), txtLastName.getText());
             clearNameFields();
             setStatus(work);
@@ -319,7 +320,7 @@ public class Program {
 
     // region Btn Find Vacant Rooms
     public void btnFindRooms(ActionEvent actionEvent) {
-        if(tvListofHotels.getSelectionModel().getSelectedItem() != null) {
+        if (tvListofHotels.getSelectionModel().getSelectedItem() != null) {
             Hotel selectedhotel = (Hotel) tvListofHotels.getSelectionModel().getSelectedItem();
             tvListofRooms.getItems().clear();
             ArrayList<Room> rooms = Database.getRoombyRequest(selectedhotel.getId(), dpStartDate.getValue(), dpEndDate.getValue());
@@ -332,36 +333,36 @@ public class Program {
     }
 
     public void btnBookRooms(ActionEvent actionEvent) {
-        if(tvListofCustomers.getSelectionModel().getSelectedItem() != null) {
+        if (tvListofCustomers.getSelectionModel().getSelectedItem() != null) {
             Customer customer = (Customer) tvListofCustomers.getSelectionModel().getSelectedItem();
             ObservableList selectedItems = tvListofRooms.getSelectionModel().getSelectedItems();
 
             ArrayList<Reservation> reservations = new ArrayList<>();
             Period period = Period.between(dpStartDate.getValue(), dpEndDate.getValue().plusDays(1));
-            RadioButton rb_Selected = (RadioButton)tg.getSelectedToggle();
+            RadioButton rb_Selected = (RadioButton) tg.getSelectedToggle();
             Double total_price = 0.0;
             String extra_bed = "false";
             String board = "none";
             int diff = period.getDays();
             for (Object room : selectedItems) {
-                Double price = ((Room)room).getRoom_Price() * diff;
-                if(rb_Selected.getText().contains("Breakfast")) {
+                Double price = ((Room) room).getRoom_Price() * diff;
+                if (rb_Selected.getText().contains("Breakfast")) {
                     price += ((Room) room).getBreakfast() * diff;
                     board = "breakfast";
                 }
-                if(rb_Selected.getText().contains("Half board")) {
+                if (rb_Selected.getText().contains("Half board")) {
                     price += ((Room) room).getHalf_board() * diff;
                     board = "half";
                 }
-                if(rb_Selected.getText().contains("Full board")) {
+                if (rb_Selected.getText().contains("Full board")) {
                     price += ((Room) room).getFull_board() * diff;
                     board = "full";
                 }
-                if(cbExtraBed.isSelected()){
-                    price += ((Room)room).getExtra_Bed() * diff;
-                    extra_bed ="true";
+                if (cbExtraBed.isSelected()) {
+                    price += ((Room) room).getExtra_Bed() * diff;
+                    extra_bed = "true";
                 }
-                reservations.add(new Reservation(0, 0, ((Room)room).getId(), dpStartDate.getValue(), dpEndDate.getValue(), extra_bed, board, price ));
+                reservations.add(new Reservation(0, 0, ((Room) room).getId(), dpStartDate.getValue(), dpEndDate.getValue(), extra_bed, board, price));
                 total_price += price;
             }
             lblTotprice.setText("Total price: " + total_price.toString());
@@ -375,33 +376,77 @@ public class Program {
 
     public void btnUpdateRoomBookingUser(ActionEvent actionEvent) {
 
-        fill_tv_RoomReservation(((Customer)tvListofCustomers.getSelectionModel().getSelectedItem()).getId());
+        fill_tv_RoomReservation(((Customer) tvListofCustomers.getSelectionModel().getSelectedItem()).getId());
     }
 
-    public void onListofReservation_Click(MouseEvent mouseEvent) {
-        Customer customer = (Customer)tvListofCustomers.getSelectionModel().getSelectedItem();
 
+    public void onListofReservation_Click(MouseEvent mouseEvent) {
+        Reservation reservation = (Reservation) tvListofReservation.getSelectionModel().getSelectedItem();
+        dpEditStartDate.setValue(reservation.getCheckin_date());
+        dpEditEndDate.setValue(reservation.getCheckout_date());
+        if (reservation.getBoard().contains("none"))
+            rbEditNA.setSelected(true);
+        else if (reservation.getBoard().contains("breakfast"))
+            rbEditBR.setSelected(true);
+        else if (reservation.getBoard().contains("half"))
+            rbEditHB.setSelected(true);
+        else if (reservation.getBoard().contains("full"))
+            rbEditFB.setSelected(true);
+
+        if (reservation.getExtra_bed().contains("true"))
+            cbEditExtraBed.setSelected(true);
+        else
+            cbEditExtraBed.setSelected(false);
+    }
+
+    public void btnUpdateRoom(ActionEvent actionEvent) {
+        Reservation reservation = (Reservation) tvListofReservation.getSelectionModel().getSelectedItem();
+        String extra_bed = "false";
+        String board = "none";
+        RadioButton rb_Selected = (RadioButton) tgEdit.getSelectedToggle();
+        if (rb_Selected.getText().contains("Breakfast")) {
+            board = "breakfast";
+        }
+        if (rb_Selected.getText().contains("Half board")) {
+            board = "half";
+        }
+        if (rb_Selected.getText().contains("Full board")) {
+            board = "full";
+        }
+        if (cbExtraBed.isSelected()) {
+            extra_bed = "true";
+            Reservation reservationEdit = new Reservation(reservation.getId(), reservation.getBooking_Id(), reservation.getRoom_Id(), dpEditStartDate.getValue(), dpEditEndDate.getValue(), Boolean.toString(cbEditExtraBed.isSelected()), "2", 20);
+            Database.updateReservation(reservationEdit);
+        }
+    }
+
+    public void btnDeleteReservation(ActionEvent actionEvent) {
+        int id = ((Reservation)tvListofReservation.getSelectionModel().getSelectedItem()).getId();
+        Database.deleteReservation(id);
+    }
+
+    public void btnDeleteBooking(ActionEvent actionEvent) {
+        int booking_id = ((Reservation)tvListofReservation.getSelectionModel().getSelectedItem()).getBooking_Id();
+        Database.deleteBooking(booking_id);
     }
 
     // endregion
 
-    private boolean checkNameFields(){
-        if(txtFirstName.getText().length() < 1 || txtLastName.getText().length() < 1) {
+    private boolean checkNameFields() {
+        if (txtFirstName.getText().length() < 1 || txtLastName.getText().length() < 1) {
             setStatus("One of the textfields is missing something");
             return false;
-        }
-        else {
+        } else {
             return true;
         }
     }
 
-    private void clearNameFields(){
+    private void clearNameFields() {
         txtFirstName.setText("");
         txtLastName.setText("");
     }
 
-    private boolean validate(String text)
-    {
+    private boolean validate(String text) {
         return text.matches("[0-9]");
     }
 
@@ -416,7 +461,7 @@ public class Program {
                         if (item.isBefore(minDate)) {
                             setDisable(true);
                             setStyle("-fx-background-color: #ffc0cb;");
-                        }else if (item.isAfter(maxDate)) {
+                        } else if (item.isAfter(maxDate)) {
                             setDisable(true);
                             setStyle("-fx-background-color: #ffc0cb;");
                         }
@@ -429,29 +474,33 @@ public class Program {
     }
 
 
-    private void setStatus(String strStatus){
+    private void setStatus(String strStatus) {
         lblStatus1.setText("Status: " + strStatus);
     }
 
-    private void fixDatePickers(){
+    private void fixDatePickers() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String startDate = "2020-06-01";
         String endDate = "2020-07-31";
         dpStartDate.valueProperty().addListener((ov, oldValue, newValue) -> {
             dpEndDate.setValue(newValue);
-            restrictDatePicker(dpEndDate, newValue,LocalDate.parse(endDate));
+            restrictDatePicker(dpEndDate, newValue, LocalDate.parse(endDate));
         });
-        restrictDatePicker(dpStartDate, LocalDate.parse(startDate),LocalDate.parse(endDate));
+        restrictDatePicker(dpStartDate, LocalDate.parse(startDate), LocalDate.parse(endDate));
     }
 
-    private void fixRadioButtons(){
+    private void fixRadioButtons() {
         rbBR.setToggleGroup(tg);
         rbFB.setToggleGroup(tg);
         rbHB.setToggleGroup(tg);
         rbNA.setToggleGroup(tg);
         rbNA.setSelected(true);
+
+        rbEditNA.setToggleGroup(tgEdit);
+        rbEditBR.setToggleGroup(tgEdit);
+        rbEditFB.setToggleGroup(tgEdit);
+        rbEditHB.setToggleGroup(tgEdit);
+
     }
-
-
 
 }

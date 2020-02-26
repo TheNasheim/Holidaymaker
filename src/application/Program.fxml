@@ -80,7 +80,7 @@
                   <Tab text="Edit Room Booking">
                       <AnchorPane prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: white;">
                           <children>
-                              <TableView fx:id="tvListofReservation" layoutX="10.0" layoutY="10.0" prefHeight="410.0" prefWidth="810.0" onMouseClicked="#onListofReservation_Click"  />
+                              <TableView fx:id="tvListofReservation" layoutX="10.0" layoutY="10.0" onMouseClicked="#onListofReservation_Click" prefHeight="410.0" prefWidth="810.0" />
 
                               <Rectangle arcHeight="15.0" arcWidth="15.0" fill="WHITE" height="130.0" layoutX="10.0" layoutY="425.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
                               <Label layoutX="20.0" layoutY="430.0" text="Start Date" />
@@ -98,9 +98,9 @@
                               <CheckBox fx:id="cbEditExtraBed" layoutX="240.0" layoutY="530.0" mnemonicParsing="false" text="Extra Bed" />
 
                               <Rectangle arcHeight="15.0" arcWidth="15.0" fill="WHITE" height="130.0" layoutX="450.0" layoutY="425.0" stroke="BLACK" strokeType="INSIDE" width="170.0" />
-                              <Button layoutX="455.0" layoutY="440.0" mnemonicParsing="false" onAction="#btnBookRooms" prefWidth="160.0" text="Save changes selected room" />
-                              <Button layoutX="455.0" layoutY="470.0" mnemonicParsing="false" onAction="#btnBookRooms" prefWidth="160.0" text="Remove selected room" />
-                              <Button layoutX="455.0" layoutY="500.0" mnemonicParsing="false" onAction="#btnBookRooms" prefWidth="160.0" text="Remove selected booking" />
+                              <Button layoutX="455.0" layoutY="440.0" mnemonicParsing="false" onAction="#btnUpdateRoom" prefWidth="160.0" text="Save changes selected room" />
+                              <Button layoutX="455.0" layoutY="470.0" mnemonicParsing="false" onAction="#btnDeleteReservation" prefWidth="160.0" text="Remove selected Reserv" />
+                              <Button layoutX="455.0" layoutY="500.0" mnemonicParsing="false" onAction="#btnDeleteBooking" prefWidth="160.0" text="Remove selected booking" />
                               <Label fx:id="lblEditTotprice" layoutX="460.0" layoutY="530.0" text="Total Price: 0" />
 
 

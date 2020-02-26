@@ -441,6 +441,52 @@ public class Database {
             ex.printStackTrace();
         }
     }
+
+    public static void updateReservation(Reservation reservationEdit) {
+        String query = "UPDATE reservation SET booking_id = ?, room_id = ?, checkin_date = ?, checkout_date = ?, extra_bed = ?, board = ?, price = ? WHERE id = ?";
+        try {
+            statement = conn.prepareStatement(query);
+            statement.setInt(1, reservationEdit.getBooking_Id());
+            statement.setInt(2, reservationEdit.getRoom_Id());
+            statement.setString(3, reservationEdit.getCheckin_date().toString());
+            statement.setString(4, reservationEdit.getCheckout_date().toString());
+            statement.setString(5, reservationEdit.getExtra_bed());
+            statement.setString(6, reservationEdit.getBoard());
+            statement.setDouble(7, reservationEdit.getPrice());
+            statement.setInt(8, reservationEdit.getId());
+            statement.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void deleteReservation(int id) {
+        String query = "DELETE FROM reservation WHERE id = ?";
+        try {
+            statement = conn.prepareStatement(query);
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void deleteBooking(int id) {
+        String query1 = "DELETE FROM booking WHERE id = ?";
+        String query2 = "DELETE FROM reservation WHERE booking_id = ?";
+        try {
+            statement = conn.prepareStatement(query1);
+            statement.setInt(1, id);
+            statement.executeUpdate();
+
+            statement = conn.prepareStatement(query2);
+            statement.setInt(1, id);
+            statement.executeUpdate();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }
 
 
